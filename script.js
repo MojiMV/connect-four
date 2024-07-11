@@ -48,7 +48,7 @@ function Gameboard() {
     playerOneName = "Player One",
     playerTwoName = "Player Two"
   ) {
-    const board = Gameboard();
+    const board1 = Gameboard();
   
     const players = [
       {
@@ -69,7 +69,7 @@ function Gameboard() {
     const getActivePlayer = () => activePlayer;
   
     const printNewRound = () => {
-      board.printBoard();
+      board1.printBoard();
       console.log(`${getActivePlayer().name}'s turn.`);
     };
   
@@ -77,11 +77,51 @@ function Gameboard() {
       console.log(
         `Dropping ${getActivePlayer().name}'s token into column ${column}...`
       );
-      board.dropToken(column, getActivePlayer().token);
+      board1.dropToken(column, getActivePlayer().token);
   
-      /*  This is where we would check for a winner and handle that logic,
-          such as a win message. */
-  
+      function checkWin(board, player) {
+        const rows = board.length;
+        const cols = board[0].length;
+        
+        // horizontalCheck 
+        for (let j = 0; j< cols -3 ; j++ ){
+          for (let i = 0; i< rows ; i++){
+              if (board[i][j].getValue() == player && board[i][j+1].getValue() == player && board[i][j+2].getValue() == player && board[i][j+3].getValue() == player){
+                  return true;
+                }           
+            }
+        }
+        // verticalCheck
+        for (let i = 0; i < rows-3 ; i++ ){
+            for (let j = 0; j < cols; j++){
+                if (board[i][j].getValue() == player && board[i+1][j].getValue() == player && board[i+2][j].getValue() == player && board[i+3][j].getValue() == player){
+                    return true;
+                }           
+            }
+        }
+        // ascendingDiagonalCheck 
+        for (let i=3; i<rows; i++){
+            for (let j=0; j<cols-3; j++){
+                if (board[i][j].getValue() == player && board[i-1][j+1].getValue() == player && board[i-2][j+2].getValue() == player && board[i-3][j+3].getValue() == player)
+                    return true;
+            }
+        }
+        // descendingDiagonalCheck
+        for (let i=3; i<rows; i++){
+            for (let j=3; j<cols; j++){
+                if (board[i][j].getValue() == player && board[i-1][j-1].getValue() == player && board[i-2][j-2].getValue() == player && board[i-3][j-3].getValue() == player)
+                    return true;
+            }
+        }
+        return false;
+      }
+
+      if (checkWin(board1.getBoard(), getActivePlayer().token)){
+        alert(`${getActivePlayer().name} won this round!`);
+      } else{
+        console.log("no winner yet.");
+      }
+      
       switchPlayerTurn();
       printNewRound();
     };
@@ -91,7 +131,7 @@ function Gameboard() {
     return {
       playRound,
       getActivePlayer,
-      getBoard: board.getBoard
+      getBoard: board1.getBoard
     };
   }
   
